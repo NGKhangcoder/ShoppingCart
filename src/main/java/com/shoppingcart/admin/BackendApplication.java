@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.shoppingcart.admin"})
+@ComponentScan(basePackages = { "com.shoppingcart.admin.*"})
 @EnableJpaRepositories(basePackages = { "com.shoppingcart.admin.*" })// scan packages same repository and execute them
 @EntityScan({ "com.shoppingcart.admin.*" }) //scan packages storing @Enitity 
 public class BackendApplication {
