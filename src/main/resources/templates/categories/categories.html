@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
+
+	<title>Categories - Shopping Cart Admin</title>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<!-- https://fontawesome.com/download =>nhấn download Free For Web, copy webfonts, copy css/all.css vào folder fontawesome -->
+	<!-- https://fontawesome.com/search =>search từ khóa pointrait =>chọn <i class="fa-solid fa-image-portrait"></i> -->
+	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+   <div class="container-fluid">
+        <div>
+            <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+                <a th:href="@{/}" class="navbar-brand">
+                    <img th:src="@{/images/Shopping-logo.png}" alt="" width="100px">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="topNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a th:href="@{'/users'}" class="nav-link dropdown-toggle" data-toggle="dropdown" >Users</a>
+                            <div class="dropdown-menu">
+                                <a th:href="@{/user/new}" class="dropdown-item">Create New</a>
+                                <a th:href="@{/users}" class="dropdown-item">View All</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a th:href="@{'/categories'}" class="nav-link dropdown-toggle" data-toggle="dropdown" >Categories</a>
+                            <div class="dropdown-menu">
+                                <a th:href="@{/categories/new}" class="dropdown-item">Create New</a>
+                                <a th:href="@{/categories}" class="dropdown-item">View All</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div> 
+            <h2 class="text-center">Manage Categories</h2>
+            <a th:href="@{/categories/new}" class="fa-solid fa-plus fa-2x icon-dark mr-2">+</a>
+        </div>
+
+        <div th:if="${message != null}" class="alert alert-success text-center">
+            [[${message}]]
+        </div>
+
+        <div class="full-details">
+            <table class="table table-bordered table-striped table-hover table-reponsive-xl">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="hideable-column">Category ID</th>
+                        <th>Name</th>
+                        <th class="hideable-column">Alias</th>
+                        <th>Picture</th>
+                        <th>Enabled</th>
+                        <th>
+                            <span>Edit</span>
+                              &nbsp; &nbsp; &nbsp;   
+                            <span>Delete</span>
+                        </th>
+                     
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="category : ${listCategories}">
+
+                        <td class="hideable-column">[[${category.id}]]</td>
+                        <td class="hideable-column">[[${category.name}]]</td>
+                        <!-- <td>
+                            <span th:if="${category.photos == null}" class="fa fa-portait fa-3x icon-silver"></span>
+                            <img th:if="${category.photos != null}" th:src="@{${user.photosImagePath}}" alt="" style="width: 100px;">
+                        </td> -->
+                        <td class="hideable-column">[[${category.alias}]]</td>
+                        <td>[[${category.image}]]</td>
+                        <td>
+                            <div>
+                                <a th:if="${category.enabled == true}"  th:href="@{'/categories/' + ${category.id} + '/enabled/false'}" th:tittle="'Disable this ' + 'category'" class="fas fa-check-circle fa-2x icon-green"></a>
+                                <a th:if="${category.enabled == false}"  th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" th:tittle="'Enabled this ' + 'category'"  class="fas fa-circle fa-2x icon-dark"></a>
+                            </div>
+                        </td>
+                        <td>
+                            <a th:href="@{'/categories/edit/' + ${category.id}}" th:entityId="${category.id}" th:tittle="'Edit this ' + 'category'" class="fas fa-edit fa-2x icon-green"></a>
+                            &nbsp;&nbsp;
+                            <a th:href="@{'/categories/delete/' + ${category.id}}" th:entityId="${category.id}" th:tittle="'Delete this ' + 'category'" class="fas fa-trash fa-2x icon-dark link-delete"></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+     
+
+        <div class="modal fade text-center" id="confirmModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-tittle">Delete Confirmation</h4>
+                        <button type="button" data-dismiss="modal" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <span id="confirmText"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="" id="yesButton" class="btn btn-success">yes</a>
+                        <button type="button" class="btn btn-danger" data-dismiss ="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center m3 ">
+            <p>Shopping Cart Control Panel - Coppyright &copy; ShoppingCart</p>
+        </div>
+      
+   </div>
+   <script th:src="@{/js/common_list.js}"></script>
+   <script type ="text/javascript">
+    moduleURL = "[[@{/categories}]]";
+
+    $(document).ready(function (){
+        $(".link-delete").on("click",function(e){
+            e.preventDefault();
+            showDeleteConfirmModal($(this),"category");
+        });
+    });
+
+   </script>
+</body>
+ </html>
