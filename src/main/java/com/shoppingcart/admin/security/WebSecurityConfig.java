@@ -38,14 +38,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		auth.authenticationProvider(authenticationProvider());
 	}
 	protected void configure(HttpSecurity http)  throws Exception{
-		http.authorizeRequests()
-		.antMatchers("/users/**").hasAuthority("Admin")
-		.anyRequest().authenticated().and()
-		.formLogin().loginPage("/login").usernameParameter("email").permitAll();
+		http.authorizeRequests() 
+		.antMatchers("/users/**").hasAuthority("Admin") // authorize/phan quyen role admin can acess /user/...
+		.anyRequest().authenticated() // any request to sever have to be login
+		.and() // after and. Is configure form login 
+		.formLogin().loginPage("/login") // -> get mapping "/login"
+		.usernameParameter("email")// change default(user name) to email
+		.permitAll()
+		.and().rememberMe()
+		.key("Abc_123")
+		.tokenValiditySeconds(7 * 24 * 60 * 60);
 		
 	}
 	public void configure(WebSecurity web) throws Exception{
-		web.ignoring().antMatchers("/images/**","/js/**","/webjars/**");
+		web.ignoring().antMatchers("/images/**","/js/**","/webjars/**"); // no login but can access source
 		
 	}
 	

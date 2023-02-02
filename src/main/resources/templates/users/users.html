@@ -71,7 +71,7 @@
                             <div th:replace="fragments :: status(${user.enabled},'user','/users/' + ${user.id})" />
                         </td>
                         <td>
-                            <div th:replace="fragments :: edit('user','users/edit/' + ${user.id})" />
+                            <div th:replace="fragments :: edit('user', '/users/edit/' + ${user.id})" />
                             &nbsp;&nbsp;
                             <div th:replace="fragments :: delete('user',${user.id},'users/delete/' + ${user.id})" />
 

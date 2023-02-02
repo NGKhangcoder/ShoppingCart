@@ -34,7 +34,9 @@ public class User extends IdBaseEntity {
 	private String photos;
 
 	private boolean enabled;
-
+	
+	//lazy --> doenst get properly role -> can use medthod user.getRole()
+	//EAGER --> get user role properly
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
@@ -51,7 +53,7 @@ public class User extends IdBaseEntity {
 	}
 	
 	public String getFullName() {
-		return this.lastName + this.firstName;
+		return this.lastName + " " +this.firstName;
 	}
 	
 	@Transient

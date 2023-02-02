@@ -11,7 +11,7 @@ import com.shoppingcart.admin.user.UserRepository;
 
 
 
-public class ShoppingUserDetailsService implements UserDetailsService {
+public class ShoppingUserDetailsService implements UserDetailsService{
 	@Autowired
 	private UserRepository userRepo;
 	@Override

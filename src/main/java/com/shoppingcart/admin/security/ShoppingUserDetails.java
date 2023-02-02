@@ -27,7 +27,7 @@ public class ShoppingUserDetails implements UserDetails {
 		Set<Role> roles = user.getRoles();
 		List<SimpleGrantedAuthority> authories = new ArrayList<>();
 		for (Role role :roles) {
-			authories.add(new SimpleGrantedAuthority(role.getName()));
+			authories.add(new SimpleGrantedAuthority(role.getName())); //compare to role at webSecurityCOnfig.config()
 		}
 		return authories;
 	}
@@ -51,7 +51,7 @@ public class ShoppingUserDetails implements UserDetails {
 	}
 
 	@Override
-	public boolean isAccountNonLocked() {
+	public boolean isAccountNonLocked() { //locked -> unlogin
 		// TODO Auto-generated method stub
 		return true;
 	}
@@ -59,7 +59,7 @@ public class ShoppingUserDetails implements UserDetails {
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return true;
+		return true; //true -> can still use
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ShoppingUserDetails implements UserDetails {
 		return user.isEnabled();
 	} 
 	
-	public String getfullName() {
+	public String getFullName() {
 		return user.getFullName();
 	}
 	public void setFirstName(String firstName) {
