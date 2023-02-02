@@ -2,6 +2,7 @@ package com.shoppingcart.admin.entity;
 
 import java.beans.Transient;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+
 
 @Entity //to create table
 @Table(name = "users") // create table
@@ -116,12 +119,26 @@ public class User extends IdBaseEntity {
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}
+	
+	public boolean hasRole(String roleName) {
+		Iterator<Role> iterator = roles.iterator();
+		
+		while(iterator.hasNext()) {
+			Role role = iterator.next();
+			if(role.getName().equals(roleName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return "[ id= " + id + " ,email = " + email + " ,full name=" + lastName + firstName + " ]";
 	}
+	
+	
 	
 
 }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="menu">
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+            <a th:href="@{/}" class="navbar-brand">
+                <img th:src="@{/images/Shopping-logo.png}" alt="" width="100px">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="topNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a th:href="@{'/users'}" class="nav-link dropdown-toggle" data-toggle="dropdown" >Users</a>
+                        <div class="dropdown-menu">
+                            <a th:href="@{/users/new}" class="dropdown-item">Create New</a>
+                            <a th:href="@{/users}" class="dropdown-item">View All</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a th:href="@{'/categories'}" class="nav-link dropdown-toggle" data-toggle="dropdown" >Categories</a>
+                        <div class="dropdown-menu">
+                            <a th:href="@{/categories/new}" class="dropdown-item">Create New</a>
+                            <a th:href="@{/categories}" class="dropdown-item">View All</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 package com.shoppingcart.admin.entity;
 
+import java.beans.Transient;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -26,7 +28,13 @@ public class Category extends IdBaseEntity  {
 		this.name = name;
 		this.alias = alias;
 	}
-
+	
+	@Transient
+	public String getImagePath() {
+		if(id == null || image == null) return"/images/default-user.png";
+		return "/category-photos/" + this.id + "/" + this.image;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -59,6 +67,7 @@ public class Category extends IdBaseEntity  {
 		this.enabled = enable;
 	}
 	
+
 	
 	
 }
