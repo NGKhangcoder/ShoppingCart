@@ -21,9 +21,7 @@
 
 
 
-        <div th:if="${message != null}" class="alert alert-success text-center">
-            [[${message}]]
-        </div>
+
 
         <div th:replace="fragments :: search_form_and_message('/users')" />
 
@@ -56,11 +54,11 @@
 
                         <td class="hideable-column">[[${user.id}]]</td>
                         <td>
-                            <!-- <div th:replace="fragments :: user_photos" /> -->
+                            <div th:replace="fragments :: user_photos" />
 
-                            <span th:if="${user.photos == null}" class="fa fa-portait fa-3x icon-silver"></span>
+                            <!-- <span th:if="${user.photos == null}" class="fa fa-portait fa-3x icon-silver"></span>
                             <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" alt=""
-                                style="width: 60px;">
+                                style="width: 60px;"> -->
 
                         </td>
                         <td class="hideable-column">[[${user.email}]]</td>
@@ -73,7 +71,7 @@
                         <td>
                             <div th:replace="fragments :: edit('user', '/users/edit/' + ${user.id})" />
                             &nbsp;&nbsp;
-                            <div th:replace="fragments :: delete('user',${user.id},'users/delete/' + ${user.id})" />
+                            <div th:replace="fragments :: delete('user',${user.id},'/users/delete/' + ${user.id})" />
 
                         </td>
                     </tr>
@@ -84,24 +82,17 @@
         <div class="less-details ">
             <div class="row  mt-2" th:each="user : ${listUsers}">
                 <div class="col-4 ">
-                    <span th:if="${user.photos == null}" class="fa fa-portait fa-3x icon-silver"></span>
-                    <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" alt="" style="width: 60px;">
+                    <div th:replace="fragments :: user_photos "></div>
                 </div>
                 <div class="col-8">
                     <div> [[${user.fullName}]]</div>
                     <div> [[${user.roles}]]</div>
                     <div class="mt-2">
-                        <a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
-                            th:href="@{'/users/' + ${user.id} + '/enabled/false'}"
-                            th:tittle="'Disable this ' + 'user'"></a>
-                        <a th:if="${user.enabled == false}" th:href="@{'/users/' + ${user.id} + '/enabled/true'}"
-                            th:tittle="'Enabled this ' + 'user'" class="fas fa-circle fa-2x icon-dark"></a>
+                        <div th:replace="fragments :: status(${user.enabled},'user','/users/' + ${user.id})" />
                         &nbsp;
-                        <a th:href="@{'/user/edit/' + ${user.id}}" th:tittle="'Edit this' + 'user'"
-                            class="fas fa-edit fa-2x icon-green"></a>
+                        <div th:replace="fragments :: edit('user', '/users/edit/' + ${user.id})" />
                         &nbsp;&nbsp;
-                        <a th:href="@{'/user/delete/' + ${user.id}}" th:entityId="${user.id}"
-                            th:tittle="'Delete this' + 'user'" class="fas fa-trash fa-2x icon-dark link-delete"></a>
+                        <div th:replace="fragments :: delete('user',${user.id},'/users/delete/' + ${user.id})" />
                     </div>
                 </div>
             </div>

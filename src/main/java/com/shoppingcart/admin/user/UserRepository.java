@@ -18,11 +18,14 @@ public interface UserRepository extends PagingAndSortingRepository<User, Integer
 	@Modifying
 	public void updateEnabledStatus(Integer id, boolean enabled);
 
+	
+	
 	// check Duplicated Email
 	@Query("SELECT u FROM User u WHERE u.email = :email")
 	public User getUserByEmail(@Param("email") String email);
 
-	@Query("Select u from User u where u.firstName Like %?1% OR u.lastName Like %?1% Or u.email Like %?1%")
+//	@Query("Select u from User u where u.firstName Like %?1% OR u.lastName Like %?1% Or u.email Like %?1%")
+	@Query("SELECT u From User u Where CONCAT(u.id,' ',u.email,' ',u.firstName,' '," + " u.lastName) Like %?1%")
 	public Page<User> findAll(String keyword, Pageable pageable);
 
 }

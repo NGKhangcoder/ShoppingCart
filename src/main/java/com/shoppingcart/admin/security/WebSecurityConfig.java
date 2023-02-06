@@ -45,7 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.formLogin().loginPage("/login") // -> get mapping "/login"
 		.usernameParameter("email")// change default(user name) to email
 		.permitAll()
-		.and().rememberMe()
+		.and().logout().permitAll().and()
+		.rememberMe()
 		.key("Abc_123")
 		.tokenValiditySeconds(7 * 24 * 60 * 60);
 		

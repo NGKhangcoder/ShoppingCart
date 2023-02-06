@@ -3,6 +3,9 @@
 
 <body>
     <div th:fragment="menu">
+        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+            <input type="submit" />
+        </form>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <a th:href="@{/}" class="navbar-brand">
                 <img th:src="@{/images/Shopping-logo.png}" alt="" width="100px">
@@ -34,10 +37,11 @@
                     </th:block>
                     <li><span class="fas fa-user fa-2x icon sliver"></span></li>
                     <li class="nav-item dropdown">
+                        <!-- principal reflection to shoppingUserDetails -->
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" th:href="@{/account}"
                             sec:authentication="principal.fullName"></a>
                         <div class="dropdown-menu">
-                            <a href="" class="dropdown-item" id="logoutLink">Signout</a>
+                            <a class="dropdown-item" id="logoutLink">Signout</a>
                         </div>
                     </li>
                 </ul>

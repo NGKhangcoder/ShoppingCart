@@ -1,4 +1,4 @@
-package com.shoppingcart.admin.controller;
+package com.shoppingcart.admin.category;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +23,7 @@ import com.shoppingcart.admin.category.export.CategoryCsvExporter;
 import com.shoppingcart.admin.category.export.CategoryExcelExporter;
 import com.shoppingcart.admin.category.export.CategoryPDFExporter;
 import com.shoppingcart.admin.entity.Category;
-import com.shoppingcart.admin.user.CategoryService;
+
 
 @Controller
 public class CategoryController {

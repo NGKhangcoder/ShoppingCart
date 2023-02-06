@@ -1,4 +1,4 @@
-package com.shoppingcart.admin.user;
+package com.shoppingcart.admin.category;
 
 import java.util.List;
 

@@ -16,12 +16,13 @@ import org.springframework.stereotype.Service;
 import com.shoppingcart.admin.entity.Role;
 import com.shoppingcart.admin.entity.User;
 
+
 @Service
 @Transactional
 public class UserService {
 	
 	public static final int USERS_PER_PAGE = 4;  
-	
+
 	@Autowired
 	private UserRepository userRepo;
 
@@ -114,10 +115,14 @@ public class UserService {
 		}
 		return true;
 	}
-	
+	public User getUserEmail(String email) {
+		return userRepo.getUserByEmail(email);
+	}
 	private void encodePassword(User user) {
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
 	}
+	
+
 
 }

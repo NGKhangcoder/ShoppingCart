@@ -5,3 +5,7 @@ function showDeleteConfirmModal(link,entityName){
     $("#confirmText").text("Are you sure want to delete this " + entityName + " ID: " +  entityId + "?");
     $("#confirmModal").modal();
 }
+
+function clearFilter() {
+    window.location= moduleURL;
+}
