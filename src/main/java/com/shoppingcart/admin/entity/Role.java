@@ -2,6 +2,7 @@ package com.shoppingcart.admin.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,7 +13,10 @@ public class Role extends IdBaseEntity {
 
 	@Column(length = 150, nullable = false)
 	private String description;
-
+//	
+//	@ManyToOne
+//	private User user;
+	
 	public Role() {
 
 	}

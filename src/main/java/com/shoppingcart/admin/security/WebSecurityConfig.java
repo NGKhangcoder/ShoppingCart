@@ -39,7 +39,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	protected void configure(HttpSecurity http)  throws Exception{
 		http.authorizeRequests() 
-		.antMatchers("/users/**").hasAuthority("Admin") // authorize/phan quyen role admin can acess /user/...
+		.antMatchers("/users/**").hasAuthority("Admin")
+		.antMatchers("/categories/**","/brands/**").hasAnyAuthority("Admin","Editor")// authorize/phan quyen role admin can acess /user/...
 		.anyRequest().authenticated() // any request to sever have to be login
 		.and() // after and. Is configure form login 
 		.formLogin().loginPage("/login") // -> get mapping "/login"

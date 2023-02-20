@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +24,7 @@ import com.shoppingcart.admin.FileUploadUtil;
 import com.shoppingcart.admin.entity.Role;
 import com.shoppingcart.admin.entity.User;
 import com.shoppingcart.admin.security.ShoppingUserDetails;
-import com.shoppingcart.admin.security.ShoppingUserDetailsService;
-import com.shoppingcart.admin.user.UserNotFoundException;
-import com.shoppingcart.admin.user.UserService;
+
 import com.shoppingcart.admin.user.export.UserCsvExporter;
 import com.shoppingcart.admin.user.export.UserExcelExporter;
 import com.shoppingcart.admin.user.export.UserPDFExporter;
@@ -36,8 +34,6 @@ public class UserController {
 	@Autowired
 	private UserService service;
 
-	private ShoppingUserDetailsService detailService = new ShoppingUserDetailsService();
-	
 	private String defaultRedirectURL = "redirect:/users/page/1?sortField=firstName&sortDir=asc";
 
 	@GetMapping("/users")
@@ -74,11 +70,12 @@ public class UserController {
 				user.setPhotos(null);
 			service.save(user);
 		}
-		logger.setFirstName(user.getFirstName());
-		logger.setLastName(user.getLastName());
+//		logger.setFirstName(user.getFirstName());
+//		logger.setLastName(user.getLastName());
 		redirectAttributes.addFlashAttribute("message", " The user has been saved successfully.");
 		return getRedirectURLtoAffectedUser(user);
 	}
+
 	private String getRedirectURLtoAffectedUser(User user) {
 		String firstPartOfEmail = user.getEmail().split("@")[0];
 		return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
@@ -94,7 +91,6 @@ public class UserController {
 			model.addAttribute("listRoles", listRoles);
 			model.addAttribute("user", user);
 			redirectAttributes.addFlashAttribute("message", "Edit ID: " + id);
-			
 
 			return "users/user_form";
 		} catch (UserNotFoundException ex) {
@@ -121,7 +117,8 @@ public class UserController {
 
 	@GetMapping("/users/{id}/enabled/{status}")
 	public String updateUserEnabledStatus(@PathVariable(name = "id") Integer id,
-			@PathVariable(name = "status") boolean enabled, RedirectAttributes redirectAttributes, User user,Model model) {
+			@PathVariable(name = "status") boolean enabled, RedirectAttributes redirectAttributes, User user,
+			Model model) {
 		service.updateUserEnabledStatus(id, enabled);
 		String status = enabled ? "enabled" : "disabled";
 		String message = "the user ID " + id + "hase been " + status;
@@ -156,7 +153,6 @@ public class UserController {
 	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
 			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
 
-
 		Page<User> page = service.listByPage(pageNum, sortField, sortDir, keyword);
 		List<User> listUsers = page.getContent();
 
@@ -182,18 +178,18 @@ public class UserController {
 		return "users/users";
 	}
 
-	@GetMapping("/account")
-	public String showInfor( Model model,
-			@AuthenticationPrincipal ShoppingUserDetails logger) {
-
-		User user = service.getUserEmail(logger.getUsername());
-
-		List<Role> listRoles = service.listRoles();
-		model.addAttribute("listRoles", listRoles);
-		model.addAttribute("user", user);
-		model.addAttribute("pageTittle", "User's Information");
-
-		return "users/user_form";
-	}
+//	@GetMapping("/account")
+//	public String showInfor( Model model,
+//			@AuthenticationPrincipal ShoppingUserDetails logger) {
+//
+//		User user = service.getUserEmail(logger.getUsername());
+//
+//		List<Role> listRoles = service.listRoles();
+//		model.addAttribute("listRoles", listRoles);
+//		model.addAttribute("user", user);
+//		model.addAttribute("pageTittle", "User's Information");
+//
+//		return "account/account_form";
+//	}
 
 }

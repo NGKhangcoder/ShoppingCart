@@ -1,10 +1,15 @@
 package com.shoppingcart.admin.category;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.poifs.property.Child;
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +29,6 @@ import com.shoppingcart.admin.category.export.CategoryExcelExporter;
 import com.shoppingcart.admin.category.export.CategoryPDFExporter;
 import com.shoppingcart.admin.entity.Category;
 
-
 @Controller
 public class CategoryController {
 	@Autowired
@@ -32,32 +36,33 @@ public class CategoryController {
 
 	@GetMapping("/categories")
 	public String listAll(Model model) {
-		return listByPage(1, model, "id", "asc",null);
+		return listByPage(1, model, "id", "asc", null);
 	}
 
 	@GetMapping("/categories/page/{pageNum}")
 	public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
-			@Param("sortField") String sortField, @Param("sortDir") String sortDir,@Param("keyword")String keyword) {
-		System.out.println("Sort Field: " + sortField);
-		System.out.println("Sort Field: " + sortDir);
-		
-		Page<Category> page = service.listPerPage(pageNum,sortField,sortDir,keyword);
-		List<Category> listCategories = page.getContent();
+			@Param("sortField") String sortField, @Param("sortDir") String sortDir, @Param("keyword") String keyword) {
 
-		long startCount = (pageNum - 1) * CategoryService.CATEGORIES_PER_PAGE + 1;
-		long endCount = startCount + CategoryService.CATEGORIES_PER_PAGE - 1;
-		if (endCount > page.getTotalElements()) {
-			endCount = page.getTotalElements();
+
+//		Page<Category> page = service.listPerPage(pageNum, sortField, sortDir, keyword);
+//		List<Category> listCategories = page.getContent();
+		CategoryPageInfor pageInfo = new CategoryPageInfor();
+		List<Category> listCategories = service.listByPage(pageInfo, pageNum, sortDir, keyword);
+		
+		long startCount = (pageNum - 1) * CategoryService.ROOT_CATEGORIES_PAGE + 1;
+		long endCount = startCount + CategoryService.ROOT_CATEGORIES_PAGE - 1;
+		if (endCount > pageInfo.getTotalElements()) {
+			endCount = pageInfo.getTotalElements();
 		}
-		
+
 		String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-		
+
 		model.addAttribute("listCategories", listCategories);
 		model.addAttribute("currentPage", pageNum);
 		model.addAttribute("startCount", startCount);
 		model.addAttribute("endCount", endCount);
-		model.addAttribute("totalPages", page.getTotalPages());
-		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("totalPages", pageInfo.getTotalPages());
+		model.addAttribute("totalItems", pageInfo.getTotalElements());
 		model.addAttribute("sortField", sortField);
 		model.addAttribute("sortDir", sortDir);
 		model.addAttribute("reverseSortDir", reverseSortDir);
@@ -66,15 +71,50 @@ public class CategoryController {
 		return "categories/categories";
 	}
 
+//	@GetMapping("/categories/new")
+//	public String createNewCategory(Model model) {
+//		
+//	
+//		model.addAttribute("listCategories", listChildren);
+//		model.addAttribute("category", new Category());
+//		model.addAttribute("pageTittle", "Create New Category");
+//
+//		return "categories/categories_form";
+//	}
+	
 	@GetMapping("/categories/new")
 	public String createNewCategory(Model model) {
-		Category category = new Category();
+		List<Category> listCategories = service.listCategoriesUsedInForm();
 
-		model.addAttribute("category", category);
-		model.addAttribute("pageTittle", "Create New");
+	
+		model.addAttribute("listCategories",listCategories);
+		model.addAttribute("category", new Category());
+		model.addAttribute("pageTittle", "Create New Category");
 
 		return "categories/categories_form";
 	}
+
+//	private Set<Category> callChildren(Set<Category> children, Category parent, String underline) {
+//
+//		Set<Category> getChildren = parent.getChildren();
+//		if (parent.getParent() == null) {
+//
+//			children.add(parent);
+//		}
+//		for (Category category : getChildren) {
+//			category.setName(underline + category.getName());
+//			children.add(category);
+//
+//			if (!category.getChildren().isEmpty()) {
+//
+//				callChildren(children, category, underline + "--");
+//
+//			}
+//
+//		}
+//		return children;
+//
+//	}
 
 	@PostMapping("/categories/save")
 	public String saveCategory(Category category, RedirectAttributes redirectAttributes,
@@ -135,20 +175,21 @@ public class CategoryController {
 
 		return "redirect:/categories";
 	}
+
 	@GetMapping("/categories/export/csv")
 	public void exportToCsv(HttpServletResponse response) throws IOException {
 		List<Category> listCategoris = service.listAll();
 		CategoryCsvExporter categoryCsvExporter = new CategoryCsvExporter();
 		categoryCsvExporter.export(listCategoris, response);
 	}
-	
+
 	@GetMapping("/categories/export/excel")
 	public void exportToExcel(HttpServletResponse response) throws IOException {
 		List<Category> listCategoris = service.listAll();
 		CategoryExcelExporter categoryExcelExporter = new CategoryExcelExporter();
 		categoryExcelExporter.export(response, listCategoris);
 	}
-	
+
 	@GetMapping("/categories/export/pdf")
 	public void exportToPdf(HttpServletResponse response) throws IOException {
 		List<Category> listCategoris = service.listAll();

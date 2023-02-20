@@ -2,240 +2,140 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
 
-    <title>Categories - Shopping Cart Admin</title>
+	<head th:replace="fragments :: page_head('Category - Shopping Cart Admin','tag')" />
+</head>
 
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
-    <!-- https://fontawesome.com/download =>nhấn download Free For Web, copy webfonts, copy css/all.css vào folder fontawesome -->
-    <!-- https://fontawesome.com/search =>search từ khóa pointrait =>chọn <i class="fa-solid fa-image-portrait"></i> -->
-    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
+
+	<title>Categories - Shopping Cart Admin</title>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+	<!-- https://fontawesome.com/download =>nhấn download Free For Web, copy webfonts, copy css/all.css vào folder fontawesome -->
+	<!-- https://fontawesome.com/search =>search từ khóa pointrait =>chọn <i class="fa-solid fa-image-portrait"></i> -->
+	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div>
-            <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-                <a th:href="@{/}" class="navbar-brand">
-                    <img th:src="@{/images/Shopping-logo.png}" alt="" width="100px">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="topNavbar">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a th:href="@{'/users'}" class="nav-link dropdown-toggle" data-toggle="dropdown">Users</a>
-                            <div class="dropdown-menu">
-                                <a th:href="@{/user/new}" class="dropdown-item">Create New</a>
-                                <a th:href="@{/users}" class="dropdown-item">View All</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a th:href="@{'/categories'}" class="nav-link dropdown-toggle"
-                                data-toggle="dropdown">Categories</a>
-                            <div class="dropdown-menu">
-                                <a th:href="@{/categories/new}" class="dropdown-item">Create New</a>
-                                <a th:href="@{/categories}" class="dropdown-item">View All</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        <div>
-            <h2 class="text-center">Manage Categories</h2>
-            <a th:href="@{/categories/new}" class="fa-solid fa-plus fa-2x icon-dark mr-2">+</a>
-            <a th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
-            <a th:href="@{/categories/export/excel}" class="fas fa-file-excel fa-2x icon-dark mr-2"></a>
-            <a th:href="@{/categories/export/pdf}" class="fas fa-file-pdf fa-2x icon-dark mr-2"></a>
-        </div>
+	<div class="container-fluid">
+		<div th:replace="navigation :: menu"></div>
 
-        <div th:if="${message != null}" class="alert alert-success text-center">
-            [[${message}]]
-        </div>
+		<div>
+			<h2 class="text-center">Manage Categories</h2>
+			<a th:href="@{/categories/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2">+</a> <a
+				th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a> <a
+				th:href="@{/categories/export/excel}" class="fas fa-file-excel fa-2x icon-dark mr-2"></a> <a
+				th:href="@{/categories/export/pdf}" class="fas fa-file-pdf fa-2x icon-dark mr-2"></a>
+		</div>
 
-        <div class="m-3">
-            <form th:action="@{'/categories/page/' + ${currentPage}}" class="form-inline">
-                <input type="hidden" name="sortField" th:value="${sortField}" />
-                <input type="hidden" name="sortDir" th:value="${sortDir}" />
-                Filter:&nbsp;
-                <input type="search" name="keyword" th:value="${keyword}" class="form-control" required />
-                &nbsp;&nbsp;
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i>
-                </button>
+		<div th:replace="fragments :: search_form_and_message('/categories')" />
 
-                <button type="button" class="btn btn-secondary" onclick="clearFilter()">
-                    <i class="fas fa-eraser"></i>
-                </button>
-            </form>
 
-        </div>
+		<div class="full-details">
+			<table class="table table-bordered table-striped table-hover table-reponsive-xl">
+				<thead class="thead-dark">
+					<tr>
+						<th>
+						<th th:replace="fragments :: column_link('id','Category ID','/categories','tag')"></th>
+						</th>
 
-        <div class="full-details">
-            <table class="table table-bordered table-striped table-hover table-reponsive-xl">
-                <thead class="thead-dark">
-                    <tr>
-                        <th class="hideable-column">
-                            <a th:if="${sortField != 'id'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${sortDir}}"
-                                class="text-white">ID</a>
-                            <a th:if="${sortField == 'id'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}"
-                                class="text-white">ID</a>
-                            <span th:if="${sortField == 'id'}"
-                                th:class="${sortDir} == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></span>
-                        </th>
-                        <th>
-                            <a th:if="${sortField != 'name'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=name&sortDir=' + ${sortDir}}"
-                                class="text-white">Name</a>
-                            <a th:if="${sortField == 'name'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}"
-                                class="text-white">Name</a>
-                            <span th:if="${sortField == 'name'}"
-                                th:class="${sortDir} == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></span>
-                        </th>
-                        <th class="hideable-column">
-                            <a th:if="${sortField != 'alias'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=alias&sortDir=' + ${sortDir}}"
-                                class="text-white">Alias</a>
-                            <a th:if="${sortField == 'alias'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=alias&sortDir=' + ${reverseSortDir}}"
-                                class="text-white">Alias</a>
-                            <span th:if="${sortField == 'alias'}"
-                                th:class="${sortDir} == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></span>
-                        </th>
-                        <th>Picture</th>
-                        <th>
-                            <a th:if="${sortField != 'enabled'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=enabled&sortDir=' + ${sortDir}}"
-                                class="text-white">Enabled</a>
-                            <a th:if="${sortField == 'enabled'}"
-                                th:href="@{'/categories/page/' + ${currentPage} + '?sortField=enabled&sortDir=' + ${reverseSortDir}}"
-                                class="text-white">Enabled</a>
-                            <span th:if="${sortField == 'enabled'}"
-                                th:class="${sortDir} == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'"></span>
-                        </th>
-                        <th>
-                            <span>Edit</span>
-                            &nbsp; &nbsp; &nbsp;
-                            <span>Delete</span>
-                        </th>
+						<th>Picture</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="category : ${listCategories}">
+						<th>
+						<th th:replace="fragments :: column_link('name','Name','/categories','tag')"></th>
+						</th>
 
-                        <td class="hideable-column">[[${category.id}]]</td>
-                        <td class="hideable-column">[[${category.name}]]</td>
-                        <td class="hideable-column">[[${category.alias}]]</td>
-                        <td>
-                            <span th:if="${category.image == null}" class="fa fa-portait fa-3x icon-silver"></span>
-                            <img th:if="${category.image != null}" th:src="@{${category.imagePath}}" alt=""
-                                style="width: 100px;">
-                        </td>
-                        <td>
-                            <div>
-                                <a th:if="${category.enabled == true}"
-                                    th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
-                                    th:tittle="'Disable this ' + 'category'"
-                                    class="fas fa-check-circle fa-2x icon-green"></a>
-                                <a th:if="${category.enabled == false}"
-                                    th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
-                                    th:tittle="'Enabled this ' + 'category'" class="fas fa-circle fa-2x icon-dark"></a>
-                            </div>
-                        </td>
-                        <td>
-                            <a th:href="@{'/categories/edit/' + ${category.id}}" th:entityId="${category.id}"
-                                th:tittle="'Edit this ' + 'category'" class="fas fa-edit fa-2x icon-green"></a>
-                            &nbsp;&nbsp;
-                            <a th:href="@{'/categories/delete/' + ${category.id}}" th:entityId="${category.id}"
-                                th:tittle="'Delete this ' + 'category'"
-                                class="fas fa-trash fa-2x icon-dark link-delete"></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+						<th class="hideable-column">
+						<th th:replace="fragments :: column_link('alias','Alias','/categories','tag')"></th>
+						</th>
 
 
 
-        <div class="modal fade text-center" id="confirmModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-tittle">Delete Confirmation</h4>
-                        <button type="button" data-dismiss="modal" class="close">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <span id="confirmText"></span>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="" id="yesButton" class="btn btn-success">yes</a>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+						<th>
+						<th th:replace="fragments :: column_link('enabled','Status','/categories','tag')"></th>
+						</th>
 
-        <div class="text-center m-1" th:if="${totalItems >0}">
-            <span>Showing user # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-        </div>
-        <div class="text-center m-1" th:unless="${totalItems > 0}">
-            <span>No users found</span>
-        </div>
-        <div th:if="${totalPages > 1}">
-            <nav>
-                <ul class="pagination justify-content-center flex-wrap">
-                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                        <a th:href="@{'/categories/page/1?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                            class="page-link">First</a>
-                    </li>
-                    <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                        <a th:href="@{'/categories/page/' + ${currentPage - 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                            class="page-link">Previous</a>
-                    </li>
-                    <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
-                        th:each="i : ${#numbers.sequence(1, totalPages)} ">
-                        <a th:href="@{'/categories/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                            class="page-link">[[${i}]]</a>
-                    </li>
-                    <li th:class="${currentPage < totalPages ? 'page-item': 'page-item disabled'}">
-                        <a th:href="@{'/categories/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                            class="page-link">Next</a>
-                    </li>
-                    <li th:class="${currentPage < totalPages ? 'page-item': 'page-item disabled'}">
-                        <a th:href="@{'/categories/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
-                            class="page-link">last</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+						<th>
+							<span>Edit</span> &nbsp; &nbsp; &nbsp; <span>Delete</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="category : ${listCategories}">
 
-        <div class="text-center m3 ">
-            <p>Shopping Cart Control Panel - Coppyright &copy; ShoppingCart</p>
-        </div>
+						<td class="hideable-column">[[${category.id}]]</td>
+						<td>
+							<div th:replace="fragments :: photos(${category.image},${category.imagePath})" />
+						</td>
+						<td class="hideable-column">[[${category.name}]] </td>
+						<td class="hideable-column">[[${category.alias}]]</td>
 
-    </div>
-    <script th:src="@{/js/common_list.js}"></script>
-    <script type="text/javascript">
-        moduleURL = "[[@{/categories}]]";
+						<td>
 
-        $(document).ready(function () {
-            $(".link-delete").on("click", function (e) {
-                e.preventDefault();
-                showDeleteConfirmModal($(this), "category");
-            });
-        });
+							<div
+								th:replace="fragments :: status(${category.enabled},'category','/categories/' + ${category.id})" />
 
-    </script>
+						</td>
+						<td>
+							<div th:replace="fragments :: edit('category', '/categories/edit/' + ${category.id})" />
+							&nbsp;&nbsp;
+							<div
+								th:replace="fragments :: delete('category',${category.id},'/categories/delete/' + ${category.id},${!category.hasChildren})" />
+
+
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="less-details ">
+			<div class="row  mt-2" th:each="category : ${listCategories}">
+				<div class="col-4 ">
+					<div th:replace="fragments :: photos(${category.image},${category.imagePath})" />
+				</div>
+				<div class="col-8">
+					<div>[[${category.name}]]</div>
+					<div>[[${category.alias}]]</div>
+					<div class="mt-2">
+						<div
+							th:replace="fragments :: status(${category.enabled},'category','/categories/' + ${category.id})" />
+						&nbsp;
+						<div th:replace="fragments :: edit('category', '/categories/edit/' + ${category.id})" />
+						&nbsp;&nbsp;
+						<div
+							th:replace="fragments :: delete('category',${category.id},'/categories/delete/' + ${category.id},true)" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div th:replace="modal ::confirmModal"></div>
+
+
+		<div th:replace="fragments :: pagination('/categories','categories')"></div>
+
+		<div th:replace="fragments :: footer" />
+
+	</div>
+
+	<script type="text/javascript">
+		moduleURL = "[[@{/categories}]]";
+
+		$(document).ready(function () {
+			$(".link-delete").on("click", function (e) {
+				e.preventDefault();
+				showDeleteConfirmModal($(this), "category");
+			});
+		});
+
+	</script>
 </body>
 
 </html>

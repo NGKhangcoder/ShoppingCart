@@ -1,7 +1,7 @@
 //file này có thể sử dụng trực tiếp những biến, thẻ bên user_form.html
 $(document).ready(function() {
 	$("#buttonCancel").on("click", function() {
-		window.location = moduleURL;//moduleURL = "[[@{/users}]]" -->khai báo bên user_form.html
+		window.location = moduleURL;
 	});
 	$("#fileImage").change(function(){
 		if(!checkFileSize(this)){

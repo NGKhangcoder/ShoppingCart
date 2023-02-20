@@ -12,6 +12,7 @@ import org.springframework.test.annotation.Rollback;
 
 import com.shoppingcart.admin.entity.Role;
 import com.shoppingcart.admin.entity.User;
+import com.shoppingcart.admin.user.UserRepository;
 
 @DataJpaTest(showSql = false)
 @AutoConfigureTestDatabase(replace = Replace.NONE)

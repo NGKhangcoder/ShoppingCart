@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <head th:replace="fragments :: page_head('Product - Shopping Cart Admin','tag')" />
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div th:replace="navigation :: menu"></div>
+
+        <div>
+            <h2 class="text-center">Manage Products</h2>
+        </div>
+
+
+        <div th:replace="fragments :: search_form_and_message('/products')" />
+
+        <div class="full-details">
+            <table class="table table-bordered table-striped table-hover table-reponsive-xl">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="hideable-column">
+                            ID
+                        </th>
+                        <th>Main Image</th>
+                        <th>Product Name</th>
+                        <th class="hideable-column">
+                            Brand
+                        </th>
+                        <th>
+                            Category
+                        </th>
+                        <th>
+                            <th th:replace="fragments :: column_link('enabled','Enabled','/products','tag')" />
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${listProducts}">
+
+                        <td class="hideable-column">[[${product.id}]]</td>
+                        <td>
+                            <div th:replace="fragments :: photos(${product.mainImage},${product.imagePath})" />
+                        </td>
+                        <td class="hideable-column">[[${product.name}]]</td>
+                        <td>[[${product.brand}]]</td>
+                        <td>[[${product.category}]]</td>
+                        <td>
+                            <div
+                                th:replace="fragments :: status(${product.enabled},'product','/products/' + ${product.id})" />
+                        </td>
+                        <td>
+                            <div th:replace="fragments :: edit('product', '/products/edit/' + ${product.id})" />
+                            &nbsp;&nbsp;
+                            <div
+                                th:replace="fragments :: delete('product',${product.id},'/products/delete/' + ${product.id},true)" />
+
+                        </td>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="less-details ">
+            <div class="row  mt-2" th:each="product : ${listproducts}">
+                <div class="col-4 ">
+                    <div th:replace="fragments :: photos(${product.mainImage},${product.imagePath})" />
+
+                </div>
+                <div class="col-8">
+                    <div>[[${product.name}]]</div>
+                    <div>[[${product.brand}]]</div>
+                    <div>[[${product.category}]]</div>
+                    <div class="mt-2">
+                        <div
+                            th:replace="fragments :: status(${product.enabled},'product','/products/' + ${product.id})" />
+                        &nbsp;
+                        <div th:replace="fragments :: edit('product', '/products/edit/' + ${product.id})" />
+                        &nbsp;&nbsp;
+                        <div
+                            th:replace="fragments :: delete('product',${product.id},'/products/delete/' + ${product.id},true)" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="modal :: confirmModal" />
+        <div th:replace="fragments :: pagination('/products','product')" />
+        <div th:replace="fragments :: footer" />
+
+
+    </div>
+
+
+
+
+    <scrpt th:src="@{/js/common_list.js}">
+        </script>
+        <script type="text/javascript">
+            MAX_FILE_SIZE = 102400;
+            moduleURL = "[[@{/products}]]";
+
+            $(document).ready(function () {
+                $(".link-delete").on("click", function (e) {
+                    e.preventDefault();
+                    showDeleteConfirmModal($(this), "product");
+                });
+            });
+
+        </script>
+</body>
+
+</html>

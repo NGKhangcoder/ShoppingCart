@@ -82,4 +82,11 @@ public class ShoppingUserDetails implements UserDetails {
 	public boolean hasRole(String roleName) {
 		return user.hasRole(roleName);
 	}
+	public Set<Role> getRoles() {
+		return this.user.getRoles();
+	}
+	
+	public void setRoles(Set<Role> listRoles) {
+		this.user.setRoles(listRoles);
+	}
 }

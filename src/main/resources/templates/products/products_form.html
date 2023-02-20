@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <head th:replace="fragments :: page_head('Products - Shopping Cart Admin','tag')" />
+</head>
+
+<body>
+    <div class="container-fluid">
+
+        <div th:replace="navigation :: menu"></div>
+
+        <div>
+            <h2 class="text-center">Manage Products - [[${pageTittle}]]</h2>
+        </div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
+                    aria-controls="overview" aria-selected="true">Overview</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#description" role="tab"
+                    aria-controls="description" aria-selected="false">Description</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images"
+                    aria-selected="false">Images</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab"
+                    aria-controls="details" aria-selected="false">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="shipping-tab" data-toggle="tab" href="#shipping" role="tab"
+                    aria-controls="shipping" aria-selected="false">Shipping</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <form th:action="@{/products/save}" class="m-3" method="post" style="max-width: 100%; margin: 0 auto;"
+                    th:object="${product}" enctype="multipart/form-data">
+
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="border border-secondary rounded p-3">
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Product Name: </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" th:field="*{name}" required minlength="3"
+                                    maxlength="128">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">alias</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" th:field="*{alias}" required minlength="3"
+                                    maxlength="64">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Short description: </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" th:field="*{shortDescription}" required
+                                    minlength="3">
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Full description: </label>
+                            <div class="col-sm-8">
+                                <input type="text" style="height: 100px;" class=" form-control"
+                                    th:field="*{fullDescription}" required minlength="3">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Product Image: </label>
+                            <div class="col-sm-8">
+                                <input type="hidden" th:field="*{mainImage}" />
+                                <input type="file" id="fileImage" name="image" accept="image/png, image/jpg"
+                                    class="mb-2" />
+                                <img th:src="@{${product.imagePath}}" alt="Photos Review" id="thumbnail"
+                                    class="img-fluid" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Brands: </label>
+                            <div class="col-sm-8">
+                                <select style="width: 50%; height: 80%;" th:field="*{brand}" class="brand">
+                                    <th:block th:each="brand : ${listBrands}">
+                                        <option th:value="${brand.id}">[[${brand.name}]]</option>
+                                    </th:block>
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Category: </label>
+                            <div class="col-sm-8">
+                                <select style="width: 50%; height: 80%;" th:field="*{category}">
+                                </select>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form label">Enabled:</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" th:field="*{enabled}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Amount of products: </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{intStock}" required
+                                    maxlength="128">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Cost: </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{cost}" required maxlength="128">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Price: </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{price}" required maxlength="128">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Discount: </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{discountPercent}" required
+                                    maxlength="128">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Length : </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{length}" required maxlength="128">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Width: </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{width}" required maxlength="128">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Height: </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{height}" required maxlength="128">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-sm-4 col-form-label">Weight </label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" th:field="*{weight}" required maxlength="128">
+                            </div>
+                        </div>
+
+
+                        <div class="text-center">
+                            <input type="submit" value="Save" class="btn btn-primary m-3">
+                            <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="description" role="tabpanel" aria-labelledby="description-tab">Description
+            </div>
+            <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">Shopping</div>
+            <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">Deatils</div>
+            <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">Shipping</div>
+        </div>
+
+
+
+
+
+
+        <div th:replace="modal :: modalDialog" />
+
+
+        <div th:replace="fragments :: footer" />
+    </div>
+
+    <script type="text/javascript">
+        MAX_FILE_SIZE = 102400;
+        moduleURL = "[[@{/products}]]";
+        dropDownBrand = $("#brand");
+        dropDownCategory = $("#category");
+        subUrl = dropDownBrand.val();
+
+        console.log(dropDownBrand.val());
+        $("document").ready(function () {
+            dropDownBrand.change(function () {
+                dropDownCategory.empty();
+                getCategories();
+            });
+            getCategories();
+        });
+
+        function getCategories() {
+            $.get(`${moduleURL}/${dropDownBrand.val()}/categories`, function (response) {
+                $.each(response, function (index, category) {
+                    dropDownCategory.append($('<option>', { value: category.id, text: category.name }));
+                });
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
