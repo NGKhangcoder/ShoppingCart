@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <head th:replace="fragments :: page_head('Products - Shopping Cart Admin','tag')" />
+    <!-- <link rel="stylesheet" th:href="@{/richtext/jquery.richtext.min.css}">
+    <script th:src="@{/richtext/jquery.richtext.min.js}"></script> -->
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+
+        <div class="m-2">
+            <label>short Description</label>
+            <textarea th:field="*{shortDescription}" required rows="5" class="form_control"></textarea>
+        </div>
+
+        <div class="m-2">
+            <label>Full Description</label>
+            <textarea th:field="*{fullDescription}" required rows="10" class="form_control"></textarea>
+        </div>
+
+    </div>
+
+
+</body>
+
+</div>
+
+
+</html>

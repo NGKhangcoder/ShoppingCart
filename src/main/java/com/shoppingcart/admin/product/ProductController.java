@@ -46,11 +46,13 @@ public class ProductController {
 	@GetMapping("/products/new")
 	public String createNewProduct(Model model) {
 
-		List<Category> listCategories = catService.listCategoriesUsedInForm();
 		List<Brand> listBrands = brandService.findAllBrand();
-	
-		model.addAttribute("product", new Product());
-		model.addAttribute("listCategories", listCategories);
+		
+		Product product = new Product();
+		product.setIntStock(true);
+		product.setEnabled(true);
+		
+		model.addAttribute("product", product);
 		model.addAttribute("listBrands", listBrands);
 		model.addAttribute("pageTittle", "Create New");
 		return "products/products_form";
@@ -68,8 +70,10 @@ public class ProductController {
 		if (endCount > page.getTotalElements()) {
 			endCount = page.getTotalElements();
 		}
+		List<Category> listCategories = catService.listCategoriesUsedInForm();
 		String reservedSortDir = sortDir.equals("asc") ? "desc" : "asc";
 
+		model.addAttribute("listCategories", listCategories);
 		model.addAttribute("listProducts", listProducts);
 		model.addAttribute("currentPage", pageNumb);
 		model.addAttribute("sortField", sortField);

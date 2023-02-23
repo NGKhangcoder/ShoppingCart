@@ -49,7 +49,7 @@ public class Product extends IdBaseEntity {
 	private boolean enabled;
 
 	@Column()
-	private int intStock;
+	private boolean intStock;
 
 	@Column()
 	private float cost;
@@ -167,11 +167,12 @@ public class Product extends IdBaseEntity {
 		this.enabled = enabled;
 	}
 
-	public int getIntStock() {
+
+	public boolean isIntStock() {
 		return intStock;
 	}
 
-	public void setIntStock(int intStock) {
+	public void setIntStock(boolean intStock) {
 		this.intStock = intStock;
 	}
 

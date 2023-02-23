@@ -16,6 +16,13 @@
 
 
         <div th:replace="fragments :: search_form_and_message('/products')" />
+        <span>
+            <select>
+                <th:block th:each="cat : ${listCategories}">
+                    <option value="${cat.id}">[[${cat.name}]]</option>
+                </th:block>
+            </select>
+        </span>
 
         <div class="full-details">
             <table class="table table-bordered table-striped table-hover table-reponsive-xl">

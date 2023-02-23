@@ -3,8 +3,11 @@
 
 <head>
 
-    <head th:replace="fragments :: page_head('Products - Shopping Cart Admin','tag')" />
+    <head th:replace="fragments :: page_head(${pageTitle},'none')" />
+    <link rel="stylesheet" th:href="@{/richText/richtext.min.css}">
+    <script th:src="@{/richtext/jquery.richtext.min.js}"></script>
 </head>
+
 
 <body>
     <div class="container-fluid">
@@ -12,202 +15,105 @@
         <div th:replace="navigation :: menu"></div>
 
         <div>
-            <h2 class="text-center">Manage Products - [[${pageTittle}]]</h2>
+            <h2 class="text-center">Manage Products - [[${pageTitle}]]
+            </h2>
+
         </div>
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
-                    aria-controls="overview" aria-selected="true">Overview</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#description" role="tab"
-                    aria-controls="description" aria-selected="false">Description</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab" aria-controls="images"
-                    aria-selected="false">Images</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab"
-                    aria-controls="details" aria-selected="false">Details</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="shipping-tab" data-toggle="tab" href="#shipping" role="tab"
-                    aria-controls="shipping" aria-selected="false">Shipping</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="overview" role="tabpanel">
-                <form th:action="@{/products/save}" class="m-3" method="post" style="max-width: 100%; margin: 0 auto;"
-                    th:object="${product}" enctype="multipart/form-data">
-
-                    <input type="hidden" th:field="*{id}" />
-
-                    <div class="border border-secondary rounded p-3">
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Product Name: </label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" th:field="*{name}" required minlength="3"
-                                    maxlength="128">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">alias</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" th:field="*{alias}" required minlength="3"
-                                    maxlength="64">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Short description: </label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" th:field="*{shortDescription}" required
-                                    minlength="3">
-                            </div>
-                        </div>
 
 
+        <form th:action="@{/products/save}" method="post" style="max-width: 700px; margin: 0 auto;"
+            th:object="${product}" enctype="multipart/form-data">
 
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Full description: </label>
-                            <div class="col-sm-8">
-                                <input type="text" style="height: 100px;" class=" form-control"
-                                    th:field="*{fullDescription}" required minlength="3">
-                            </div>
-                        </div>
+            <!-- enctype="multipart/form-data" interact with images -->
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:if="${product.category != null}" id="categoryId" th:value="${product.category.id}">
 
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Product Image: </label>
-                            <div class="col-sm-8">
-                                <input type="hidden" th:field="*{mainImage}" />
-                                <input type="file" id="fileImage" name="image" accept="image/png, image/jpg"
-                                    class="mb-2" />
-                                <img th:src="@{${product.imagePath}}" alt="Photos Review" id="thumbnail"
-                                    class="img-fluid" />
-                            </div>
-                        </div>
+            <div>
+                <ul class="nav nav-tabs" id="myTab" role="tabList">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#overview" role="tab">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#description" role="tab">Description</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#images" role="tab">Images</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#details" role="tab">Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#shipping" role="tab">Shipping</a>
+                    </li>
+                </ul>
 
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Brands: </label>
-                            <div class="col-sm-8">
-                                <select style="width: 50%; height: 80%;" th:field="*{brand}" class="brand">
-                                    <th:block th:each="brand : ${listBrands}">
-                                        <option th:value="${brand.id}">[[${brand.name}]]</option>
-                                    </th:block>
-                                </select>
+                <div class="tab-content">
+                    <div class="tab-pane active p-3" id="overview" role="tabpanel">
+                        <div th:replace="products/product_overview :: content"></div>
+                    </div>
+                    <div class="tab-pane" id="description" role="tabpanel">
+                        <div th:replace="products/product_description :: content"></div>
+                    </div>
+                    <div class="tab-pane" id="images" role="tabpanel">
+                        <div th:replace="products/product_images :: content"></div>
+                    </div>
+                    <div class="tab-pane p-3" id="details" role="tabpanel">
+                        <div th:replace="products/product_details :: content"></div>
 
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Category: </label>
-                            <div class="col-sm-8">
-                                <select style="width: 50%; height: 80%;" th:field="*{category}">
-                                </select>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form label">Enabled:</label>
-                            <div class="col-sm-8">
-                                <input type="checkbox" th:field="*{enabled}">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Amount of products: </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{intStock}" required
-                                    maxlength="128">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Cost: </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{cost}" required maxlength="128">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Price: </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{price}" required maxlength="128">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Discount: </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{discountPercent}" required
-                                    maxlength="128">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Length : </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{length}" required maxlength="128">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Width: </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{width}" required maxlength="128">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Height: </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{height}" required maxlength="128">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="" class="col-sm-4 col-form-label">Weight </label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" th:field="*{weight}" required maxlength="128">
-                            </div>
-                        </div>
-
-
-                        <div class="text-center">
-                            <input type="submit" value="Save" class="btn btn-primary m-3">
-                            <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel">
+                        <div>
+                            <input type="button" class="btn btn-secondary" value="Add More Detail">
                         </div>
                     </div>
-                </form>
+                    <div class="tab-pane p-3" id="shipping" role="tabpanel">
+                        <div th:replace="products/product_shipping :: content"></div>
+                    </div>
+                </div>
             </div>
-            <div class="tab-pane fade" id="description" role="tabpanel" aria-labelledby="description-tab">Description
+
+            <div class="text-center">
+                <input type="submit" value="Save" class="btn btn-primary m-3">
+                <input type="button" value="Cancel" class="btn btn-secondary" id="buttonCancel">
             </div>
-            <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">Shopping</div>
-            <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">Deatils</div>
-            <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">Shipping</div>
+
+
+
+        </form>
+
+        <div class="modal fade text-center" id="modalDialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-tittle">Warning</h4>
+                        <button type="button" data-dismiss="modal" class="close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <span id="modalBody"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <div th:replace="fragments :: footer"></div>
 
-
-
-
-
-        <div th:replace="modal :: modalDialog" />
-
-
-        <div th:replace="fragments :: footer" />
     </div>
 
+
+
+    <script th:src="@{/js/product_form_overview.js}"></script>
+    <script th:src="@{/js/product_form_images.js}"></script>
+    <script th:src="@{/js/product_form_details.js}"></script>
+    <script th:src="@{/js/product_form_overview.js}"></script>
     <script type="text/javascript">
-        MAX_FILE_SIZE = 102400;
+        MAX_FILE_SIZE = 502400;
         moduleURL = "[[@{/products}]]";
+        $("#shortDescription").richText();
+        $("#fullDescription").richText();
+
         dropDownBrand = $("#brand");
         dropDownCategory = $("#category");
-        subUrl = dropDownBrand.val();
-
-        console.log(dropDownBrand.val());
         $("document").ready(function () {
             dropDownBrand.change(function () {
                 dropDownCategory.empty();
@@ -215,6 +121,7 @@
             });
             getCategories();
         });
+
 
         function getCategories() {
             $.get(`${moduleURL}/${dropDownBrand.val()}/categories`, function (response) {
@@ -226,6 +133,7 @@
 
 
     </script>
+
 </body>
 
 </html>
